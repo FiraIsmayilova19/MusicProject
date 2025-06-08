@@ -1,0 +1,69 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35931.197 d17.13
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ClientApps", "ClientApps", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{4949A3CB-B18C-4835-B773-075378F4DDA5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ApiGateway", "ApiGateway", "{8FFF809E-5E63-4A64-B424-CA091A8578BD}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8EC462FD-D22E-90A8-E5CE-7E832BA40C5D}"
+	ProjectSection(SolutionItems) = preProject
+		docker-compose.yml = docker-compose.yml
+	EndProjectSection
+EndProject
+Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "music-app", "music-app\music-app.esproj", "{B9047450-9732-CE88-1201-CBFE6993E362}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityService", "IdentityService\IdentityService.csproj", "{3956B782-50F1-4CBD-A666-27001C22DB8E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MusicService", "MusicService\MusicService.csproj", "{99657407-D8C6-4952-AB57-C0CF4938E056}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FavoritesService", "FavoritesService\FavoritesService.csproj", "{6CDC6AEE-032C-4029-BDF0-6AC0F359EFCC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gateway", "Gateway\Gateway.csproj", "{BFB71C49-07F7-40C2-9A30-6DBCECDED456}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B9047450-9732-CE88-1201-CBFE6993E362}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B9047450-9732-CE88-1201-CBFE6993E362}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B9047450-9732-CE88-1201-CBFE6993E362}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{B9047450-9732-CE88-1201-CBFE6993E362}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B9047450-9732-CE88-1201-CBFE6993E362}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B9047450-9732-CE88-1201-CBFE6993E362}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{3956B782-50F1-4CBD-A666-27001C22DB8E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3956B782-50F1-4CBD-A666-27001C22DB8E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3956B782-50F1-4CBD-A666-27001C22DB8E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3956B782-50F1-4CBD-A666-27001C22DB8E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{99657407-D8C6-4952-AB57-C0CF4938E056}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{99657407-D8C6-4952-AB57-C0CF4938E056}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{99657407-D8C6-4952-AB57-C0CF4938E056}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{99657407-D8C6-4952-AB57-C0CF4938E056}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6CDC6AEE-032C-4029-BDF0-6AC0F359EFCC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6CDC6AEE-032C-4029-BDF0-6AC0F359EFCC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6CDC6AEE-032C-4029-BDF0-6AC0F359EFCC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6CDC6AEE-032C-4029-BDF0-6AC0F359EFCC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BFB71C49-07F7-40C2-9A30-6DBCECDED456}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BFB71C49-07F7-40C2-9A30-6DBCECDED456}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BFB71C49-07F7-40C2-9A30-6DBCECDED456}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BFB71C49-07F7-40C2-9A30-6DBCECDED456}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{B9047450-9732-CE88-1201-CBFE6993E362} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{3956B782-50F1-4CBD-A666-27001C22DB8E} = {4949A3CB-B18C-4835-B773-075378F4DDA5}
+		{99657407-D8C6-4952-AB57-C0CF4938E056} = {4949A3CB-B18C-4835-B773-075378F4DDA5}
+		{6CDC6AEE-032C-4029-BDF0-6AC0F359EFCC} = {4949A3CB-B18C-4835-B773-075378F4DDA5}
+		{BFB71C49-07F7-40C2-9A30-6DBCECDED456} = {8FFF809E-5E63-4A64-B424-CA091A8578BD}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {05446EAD-7AE9-4DCC-9587-A1B7AAD9779E}
+	EndGlobalSection
+EndGlobal

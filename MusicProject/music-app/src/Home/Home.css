@@ -1,0 +1,95 @@
+/* Ümumi container */
+.home-container {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(to bottom right, #eef2f3, #8e9eab);
+  min-height: 100vh;
+}
+
+/* Naviqasiya */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #1e1e2f;
+  padding: 15px 40px;
+  color: white;
+}
+
+.logo {
+  font-size: 24px;
+}
+
+.nav-links {
+  list-style: none;
+  display: flex;
+  gap: 25px;
+}
+
+.nav-links li a {
+  text-decoration: none;
+  color: white;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.nav-links li a:hover {
+  color: #ffcc00;
+}
+
+/* Hero bölməsi */
+.hero-section {
+  text-align: center;
+  margin-top: 100px;
+}
+
+.hero-section h2 {
+  font-size: 36px;
+  color: #333;
+}
+
+.hero-section p {
+  font-size: 20px;
+  margin: 20px 0;
+  color: #444;
+}
+
+.explore-btn {
+  background-color: #1e90ff;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  font-size: 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.explore-btn:hover {
+  background-color: #005bb5;
+}
+.button-group {
+  margin-top: 20px;
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.explore-btn,
+.add-music-btn {
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.add-music-btn {
+  background-color: #28a745;
+}
+
+.explore-btn:hover,
+.add-music-btn:hover {
+  opacity: 0.9;
+}

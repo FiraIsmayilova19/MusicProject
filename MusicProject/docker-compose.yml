@@ -1,0 +1,64 @@
+version: '3.8'
+
+services:
+
+  musicservice:
+    image: musicserviceapi:dev
+    build:
+      context: .
+      dockerfile: MusicService/Dockerfile
+    container_name: MusicService
+    ports:
+      - "7189:8080"
+    networks:
+      - musicapp-network
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+
+  favoritesservice:
+    image: favoritesserviceapi:dev
+    build:
+      context: .
+      dockerfile: FavoritesService/Dockerfile
+    container_name: FavoritesService
+    ports:
+      - "7091:8080"
+    networks:
+      - musicapp-network
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+
+  identityservice:
+    image: identityserviceapi:dev
+    build:
+      context: .
+      dockerfile: IdentityService/Dockerfile
+    container_name: IdentityService
+    ports:
+      - "7028:8080"
+    networks:
+      - musicapp-network
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+
+  apigateway:
+    image: musicappapigateway:dev
+    build:
+      context: .
+      dockerfile: Gateway/Dockerfile
+    container_name: Gateway
+    ports:
+      - "7093:8080"
+    depends_on:
+      - musicservice
+      - favoritesservice
+      - identityservice
+    networks:
+      - musicapp-network
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+
+networks:
+  musicapp-network:
+    driver: bridge
+
