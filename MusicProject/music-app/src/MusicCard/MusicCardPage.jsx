@@ -81,27 +81,23 @@ const MusicCardPage = () => {
   };
 
 const addToPlaylist = async (musicId) => {
-  const userId = localStorage.getItem("userId");
-  const playlistId = localStorage.getItem("playlistId"); t
-
-  if (!userId || !playlistId) {
-    alert("Əvvəlcə playlist yaradılmalıdır.");
+  if (!userId) {
+    alert("Pleylistə əlavə etmək üçün daxil olun.");
     return;
   }
 
   try {
     await axios.post("http://localhost:7093/api/Music/playlist/add-music", {
-      userId,
-      playlistId: parseInt(playlistId),
-      musicId
-    });
-
-    alert("Mahnı playlistə əlavə olundu!");
+      userId: userId,
+      musicId: musicId
+    },{withCredentials:true});
+    alert("✅ Mahnı pleylistə əlavə olundu!");
   } catch (error) {
-    console.error("Playlistə əlavə edilərkən xəta:", error);
-    alert("Xəta baş verdi.");
+    console.error("Pleylistə əlavə edilərkən xəta:", error);
+    alert("❌ Əlavə etmək mümkün olmadı.");
   }
 };
+
 
 
   return (

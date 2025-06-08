@@ -51,22 +51,6 @@ public class MusicController : ControllerBase
         return CreatedAtAction(nameof(Get), new { id = music.Id }, music);
     }
 
-    [HttpPut("{id}")]
-    public async Task<IActionResult> Update(int id, [FromForm] MusicUpdateDto dto)
-    {
-        var music = await _context.Musics.FindAsync(id);
-        if (music == null) return NotFound();
-
-        music.Title = dto.Title;
-        music.Artist = dto.Artist;
-        music.CloudinaryPublicId = dto.CloudinaryPublicId;
-        music.CoverImagePublicId = dto.CoverImagePublicId;
-        music.UserId = dto.UserId;
-
-        await _context.SaveChangesAsync();
-        return NoContent();
-    }
-
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(int id)
     {
@@ -79,15 +63,6 @@ public class MusicController : ControllerBase
         return NoContent();
     }
 
-    [HttpGet("by-user/{userId}")]
-    public async Task<IActionResult> GetByUser(string userId)
-    {
-        var musics = await _context.Musics
-            .Where(m => m.UserId == userId)
-            .ToListAsync();
-
-        return Ok(musics);
-    }
     [HttpGet("playlist/{userId}")]
     public async Task<IActionResult> GetPlaylistByUserId(string userId)
     {
@@ -109,19 +84,31 @@ public class MusicController : ControllerBase
     {
         var playlist = await _context.Playlists
             .Include(p => p.Musics)
-            .FirstOrDefaultAsync(p => p.Id == dto.PlaylistId && p.UserId == dto.UserId);
+            .FirstOrDefaultAsync(p => p.UserId == dto.UserId);
 
-        if (playlist == null) return NotFound("Playlist tapılmadı.");
+        if (playlist == null)
+        {
+            playlist = new Playlist
+            {
+                UserId = dto.UserId,
+                Name = "MyPlaylist"
+            };
+            _context.Playlists.Add(playlist);
+            await _context.SaveChangesAsync();
+        }
 
         var music = await _context.Musics.FindAsync(dto.MusicId);
-        if (music == null) return NotFound("Musiqi tapılmadı.");
+        if (music == null) return NotFound("Music not found");
 
         if (!playlist.Musics.Any(m => m.Id == dto.MusicId))
+        {
             playlist.Musics.Add(music);
+            await _context.SaveChangesAsync();
+        }
 
-        await _context.SaveChangesAsync();
-        return Ok();
+        return Ok(playlist);
     }
+
 
 
     [HttpPost("playlist")]
@@ -132,14 +119,24 @@ public class MusicController : ControllerBase
         return Ok(playlist);
     }
 
-    [HttpDelete("playlist/{id}")]
-    public async Task<IActionResult> DeletePlaylist(int id)
+    [HttpDelete("playlist/{userId}/{musicId}")]
+    public async Task<IActionResult> RemoveMusicFromPlaylist(string userId, int musicId)
     {
-        var playlist = await _context.Playlists.FindAsync(id);
-        if (playlist == null) return NotFound();
+        var playlist = await _context.Playlists
+            .Include(p => p.Musics)
+            .FirstOrDefaultAsync(p => p.UserId == userId);
 
-        _context.Playlists.Remove(playlist);
+        if (playlist == null)
+            return NotFound("Playlist tapılmadı.");
+
+        var music = playlist.Musics.FirstOrDefault(m => m.Id == musicId);
+        if (music == null)
+            return NotFound("Bu mahnı playlistdə tapılmadı.");
+
+        playlist.Musics.Remove(music);
         await _context.SaveChangesAsync();
+
         return NoContent();
     }
+
 }

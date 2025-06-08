@@ -6,6 +6,7 @@ import Home from './Home/Home';
 import UploadPage from './Upload/UploadPage';
 import MusicCardPage from './MusicCard/MusicCardPage';
 import FavoritesPage from './Favorites/FavoritesPage';
+import PlaylistPage from './Playlist/PlaylistPage';
 function App() {
   const [count, setCount] = useState(0)
 
@@ -18,6 +19,8 @@ function App() {
           <Route path="/upload" element={<UploadPage />} />
           <Route path="/musics" element={<MusicCardPage />} />
           <Route path="/favorites" element={<FavoritesPage />} />
+          <Route path="/playlist" element={<PlaylistPage />} />
+
         </Routes>
       </div>
     </>

@@ -1,4 +1,4 @@
-import React from 'react'; 
+import React from 'react';
 import './Home.css';
 import { useNavigate } from 'react-router-dom';
 
@@ -23,11 +23,12 @@ const Home = () => {
 
   const handleLogout = () => {
     localStorage.clear();
-    navigate('/login');
+    navigate('/');
   };
 
+
   const handleGoHome = () => {
-    navigate('/');
+    navigate('/home');
   };
 
   return (
@@ -37,9 +38,6 @@ const Home = () => {
           🎵 MusicApp
         </h1>
         <ul className="nav-links">
-          <li>
-            <button className="nav-btn" onClick={handleGoHome}>Əsas səhifə</button>
-          </li>
           <li>
             <button className="nav-btn" onClick={handleGoToMusics}>Musiqilər</button>
           </li>

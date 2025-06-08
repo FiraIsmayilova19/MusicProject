@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './FavoritesPage.css';
-import { FaTrash, FaPlay, FaDownload, FaPlus } from 'react-icons/fa';
+import { FaTrash, FaPlay, FaDownload, FaPlus, FaPause } from 'react-icons/fa';
 
 const CLOUDINARY_BASE_URL = 'https://res.cloudinary.com/dh9tyjbpv';
 
@@ -13,16 +13,37 @@ const FavoritesPage = () => {
 
   useEffect(() => {
     if (!userId) return;
-    axios.get(`http://localhost:7022/api/Favorites/${userId}`)
-      .then(res => setFavorites(res.data))
-      .catch(err => console.error('Favorilər alınarkən xətə:', err));
+
+const fetchFavorites = async () => {
+  try {
+    const res = await axios.get(`http://localhost:7093/api/Favorites/${userId}`);
+    const favoriteIds = res.data;
+
+    const musicDetails = await Promise.all(
+      favoriteIds.map(async (musicIdObj) => {
+        try {
+          const musicRes = await axios.get(`http://localhost:7093/api/Music/${musicIdObj.musicId}`, { withCredentials: true });
+          return { ...musicRes.data, musicId: musicIdObj.musicId };
+        } catch (err) {
+          console.error(`Musiqi ${musicIdObj.musicId} alınarkən xəta:`, err);
+          return null;
+        }
+      })
+    );
+
+    setFavorites(musicDetails.filter(m => m !== null));
+  } catch (err) {
+    console.error('Favorilər alınarkən xəta:', err);
+  }
+};
+
+
+    fetchFavorites();
   }, [userId]);
 
   const removeFromFavorites = async (id) => {
     try {
-      await axios.delete('http://localhost:7022/api/Favorites', {
-        data: { userId: Number(userId), musicId: id }
-      });
+      await axios.delete(`http://localhost:7093/api/Favorites/${userId}/${id}`);
       setFavorites(prev => prev.filter(m => m.musicId !== id));
       alert('Favorilərdən silindi!');
     } catch (err) {
@@ -40,38 +61,59 @@ const FavoritesPage = () => {
         return;
       }
     }
-    const audio = new Audio(`${CLOUDINARY_BASE_URL}/video/upload/${pubId}.mp3`);
-    audio.play();
-    setCurrentAudio(audio);
-    setPlayingId(id);
-    audio.onended = () => { setPlayingId(null); setCurrentAudio(null); };
+
+    const audioUrl = `${CLOUDINARY_BASE_URL}/video/upload/${pubId}.mp3`;
+
+    const audio = new Audio(audioUrl);
+    audio.play().then(() => {
+      setCurrentAudio(audio);
+      setPlayingId(id);
+      audio.onended = () => {
+        setPlayingId(null);
+        setCurrentAudio(null);
+      };
+    }).catch(err => {
+      console.error('Audio oynadılarkən xəta:', err);
+      alert('Mahnı oynadılarkən xəta baş verdi.');
+    });
   };
 
   const downloadMusic = (pubId, title) => {
+    const url = `${CLOUDINARY_BASE_URL}/video/upload/${pubId}.mp3`;
     const link = document.createElement('a');
-    link.href = `${CLOUDINARY_BASE_URL}/video/upload/${pubId}.mp3`;
+    link.href = url;
     link.download = `${title}.mp3`;
-    document.body.appendChild(link); link.click(); document.body.removeChild(link);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
-  const addToPlaylist = (id) => alert(`➕ Music ${id} pleylistə əlavə olundu!`);
+  const addToPlaylist = (id) => {
+    alert(`➕ Music ${id} pleylistə əlavə olundu!`);
+  };
 
-  if (!userId) return <p>Favoriləri görmək üçün daxil olun.</p>;
+  if (!userId) return <p>Favoritləri görmək üçün daxil olun.</p>;
 
   return (
     <div className="music-page">
-      <h2>Favoritlərim</h2>
+      <h2 style={{ textAlign: 'center', marginBottom: '1rem' }}>❤️ Favorilərim</h2>
       <div className="music-grid">
-        {favorites.length === 0 && <p>Favorit musiqi tapılmadı.</p>}
+        {favorites.length === 0 && <p style={{ textAlign: 'center' }}>Favorit musiqi tapılmadı.</p>}
         {favorites.map(m => (
           <div className="music-card" key={m.musicId}>
             <div className="music-header">
-              <img src={`${CLOUDINARY_BASE_URL}/image/upload/${m.coverImagePublicId}.jpg`}
-                   alt={m.title} className="poster"
-                   onError={e => e.target.src = '/default-poster.jpg'} />
+              <img
+                src={`${CLOUDINARY_BASE_URL}/image/upload/${m.coverImagePublicId}.jpg`}
+                alt={m.title}
+                className="poster"
+                onError={(e) => {
+                  e.target.onerror = null;
+                  e.target.src = '/default-poster.jpg';
+                }}
+              />
               <button className="favorite-btn active"
-                      onClick={() => removeFromFavorites(m.musicId)}
-                      title="Favorilərdən sil">
+                onClick={() => removeFromFavorites(m.musicId)}
+                title="Favorilərdən sil">
                 <FaTrash />
               </button>
             </div>
@@ -81,7 +123,7 @@ const FavoritesPage = () => {
             </div>
             <div className="controls">
               <button onClick={() => playMusic(m.cloudinaryPublicId, m.musicId)}>
-                {playingId === m.musicId ? <span>⏸</span> : <FaPlay />}
+                {playingId === m.musicId ? <FaPause /> : <FaPlay />}
               </button>
               <button onClick={() => downloadMusic(m.cloudinaryPublicId, m.title)}>
                 <FaDownload />

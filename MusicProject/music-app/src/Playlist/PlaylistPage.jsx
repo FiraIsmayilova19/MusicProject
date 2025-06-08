@@ -1,44 +1,59 @@
-import React, { useState, useEffect } from 'react';
-import { FaHeart, FaPlay, FaDownload, FaTrash } from 'react-icons/fa';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import './PlaylistPage.css';
+import { FaPlay, FaPause, FaDownload, FaTrash } from 'react-icons/fa';
 
+const CLOUDINARY_BASE = 'https://res.cloudinary.com/dh9tyjbpv';
 const PlaylistPage = () => {
   const [playlist, setPlaylist] = useState([]);
-  const [currentAudio, setCurrentAudio] = useState(null);
   const [playingId, setPlayingId] = useState(null);
+  const [currentAudio, setCurrentAudio] = useState(null);
+  const userId = localStorage.getItem('userId');
 
   useEffect(() => {
-    const storedPlaylist = JSON.parse(localStorage.getItem('playlist')) || [];
-    setPlaylist(storedPlaylist);
-  }, []);
+    if (!userId) return;
+
+    axios.get(`http://localhost:7093/api/Music/playlist/${userId}`)
+      .then(res => setPlaylist(res.data))
+      .catch(err => console.error('Playlist alınarkən xəta:', err));
+  }, [userId]);
 
   const playMusic = (musicUrl, id) => {
-    if (currentAudio) {
+    if (playingId === id && currentAudio) {
       currentAudio.pause();
-    }
-    if (playingId === id) {
       setPlayingId(null);
-      return;
+      setCurrentAudio(null);
+    } else {
+      if (currentAudio) currentAudio.pause();
+      const audio = new Audio(musicUrl);
+      audio.play();
+      setCurrentAudio(audio);
+      setPlayingId(id);
+      audio.onended = () => {
+        setPlayingId(null);
+        setCurrentAudio(null);
+      };
     }
-    const audio = new Audio(musicUrl);
-    audio.play();
-    setCurrentAudio(audio);
-    setPlayingId(id);
   };
 
-  const downloadMusic = (musicUrl, title) => {
+  const downloadMusic = (url, title) => {
     const link = document.createElement('a');
-    link.href = musicUrl;
+    link.href = url;
     link.download = `${title}.mp3`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
   };
 
-  const removeFromPlaylist = (id) => {
-    const updated = playlist.filter((music) => music.id !== id);
-    setPlaylist(updated);
-    localStorage.setItem('playlist', JSON.stringify(updated));
+  const removeFromPlaylist = (musicId) => {
+    axios.delete(`http://localhost:7093/api/Music/playlist/${userId}/${musicId}`)
+      .then(() => {
+        setPlaylist(prev => prev.filter(m => m.id !== musicId));
+      })
+      .catch(err => {
+        console.error('Silinərkən xəta:', err);
+        alert('Mahnı silinərkən xəta baş verdi.');
+      });
   };
 
   return (
@@ -49,7 +64,7 @@ const PlaylistPage = () => {
           <div className="music-card" key={music.id}>
             <div className="music-header">
               <img
-                src={`https://res.cloudinary.com/dh9tyjbpv/image/upload/${music.coverImagePublicId}.jpg`}
+                src={`${CLOUDINARY_BASE}/image/upload/${music.coverImagePublicId}.jpg`}
                 alt={music.title}
                 className="poster"
                 onError={(e) => {
@@ -63,10 +78,10 @@ const PlaylistPage = () => {
               <p>{music.artist}</p>
             </div>
             <div className="controls">
-              <button onClick={() => playMusic(`https://res.cloudinary.com/dh9tyjbpv/video/upload/${music.cloudinaryPublicId}.mp3`, music.id)}>
-                {playingId === music.id ? <FaTrash /> : <FaPlay />}
+              <button onClick={() => playMusic(`${CLOUDINARY_BASE}/video/upload/${music.cloudinaryPublicId}.mp3`, music.id)}>
+                {playingId === music.id ? <FaPause /> : <FaPlay />}
               </button>
-              <button onClick={() => downloadMusic(`https://res.cloudinary.com/dh9tyjbpv/video/upload/${music.cloudinaryPublicId}.mp3`, music.title)}>
+              <button onClick={() => downloadMusic(`${CLOUDINARY_BASE}/video/upload/${music.cloudinaryPublicId}.mp3`, music.title)}>
                 <FaDownload />
               </button>
               <button onClick={() => removeFromPlaylist(music.id)}>
